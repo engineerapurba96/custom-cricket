@@ -1,0 +1,91 @@
+<div class="container">
+    <div class="d-flex justify-content-between">
+        <h4>Players List
+        </h4>
+        <button class="btn btn-primary btn-sm" (click)="openPlayerModal()">
+            Add Player
+        </button>
+    </div>
+
+    <div class="form-group w-auto" style="max-width: 300px;">
+        <div class="input-group">
+            <input type="text" class="form-control" placeholder="Search player name" />
+        </div>
+    </div>
+</div>
+
+<!-- Player Table -->
+<div class="table-responsive border rounded mt-3">
+    <table class="table text-center table-borderless table-striped mt-2 mb-0">
+        <thead>
+            <tr class="border-2 border-top-0 border-start-0 border-end-0 border-info text-center">
+                <th>No</th>
+                <th>Player Name</th>
+                <th>Team</th>
+                <th>Points</th>
+                <th>Career Batting Best</th>
+                <th>Details</th>
+            </tr>
+        </thead>
+        <tbody>
+            <ng-container *ngIf="players.length > 0; else NoRecords">
+                <tr *ngFor="let player of players; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ player.name }}</td>
+                    <td>{{player.team.team_name}}</td>
+                    <td>{{ player.points }}</td>
+                    <td>{{ player.careerBattingBest }}</td>
+                    <td>
+                        <a [routerLink]="['/player-details', player.id]" class="btn btn-secondary btn-sm ms-3">Details</a>
+                    </td>
+                </tr>
+            </ng-container>
+            <ng-template #NoRecords>
+                <tr>
+                    <td colspan="6" class="text-center text-secondary">No players found</td>
+                </tr>
+            </ng-template>
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Structure -->
+<div class="modal fade" id="playerModal" tabindex="-1" aria-labelledby="playerModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="playerModalLabel">Add Player</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="playerForm" (ngSubmit)="onSubmitPlayer()">
+                    <div class="mb-3">
+                        <label for="name" class="form-label">Team Name</label>
+                        <input type="text" class="form-control" id="name" formControlName="name"
+                            [ngClass]="{ 'is-invalid': submitted && f['name'].errors }" placeholder="Enter team name" />
+                        <div *ngIf="submitted && f['name'].errors" class="invalid-feedback">
+                            <div *ngIf="f['name'].errors['required']">Name is required</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="points" class="form-label">Points</label>
+                        <input type="number" class="form-control" id="points" formControlName="points"
+                            [ngClass]="{ 'is-invalid': submitted && f['points'].errors }" placeholder="Enter Points" />
+                        <div *ngIf="submitted && f['points'].errors" class="invalid-feedback">
+                            <div *ngIf="f['points'].errors['required']">points is required</div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="careerBattingBest" class="form-label">Career Batting Best</label>
+                        <input type="text" class="form-control" id="careerBattingBest" formControlName="careerBattingBest"
+                            [ngClass]="{ 'is-invalid': submitted && f['careerBattingBest'].errors }" placeholder="Career Batting Best" />
+                        <div *ngIf="submitted && f['careerBattingBest'].errors" class="invalid-feedback">
+                            <div *ngIf="f['careerBattingBest'].errors['required']">careerBattingBest is required</div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
